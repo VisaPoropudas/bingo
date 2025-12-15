@@ -1,0 +1,338 @@
+.player-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.game-list {
+  padding: 1rem 0;
+}
+
+.game-list h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.games-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.game-list-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.game-list-card:hover {
+  transform: translateY(-4px);
+}
+
+.game-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.game-list-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.game-list-body {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.game-list-body p {
+  margin: 0.5rem 0;
+}
+
+.game-list-body ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.no-games {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+}
+
+.no-games .hint {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Play Game */
+.play-game {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.game-info {
+  margin-bottom: 1.5rem;
+}
+
+.leave-btn {
+  background: #f8f9fa;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.leave-btn:hover {
+  background: #e9ecef;
+}
+
+.game-info h2 {
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.game-status {
+  margin-top: 0.5rem;
+}
+
+.latest-ball {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.latest-ball-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.latest-ball-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.balls-count {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.cards-container {
+  margin-bottom: 1.5rem;
+  touch-action: pan-y;
+}
+
+.bingo-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  color: #667eea;
+  margin: 0;
+}
+
+.bingo-grid {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.grid-header {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.header-cell {
+  background: #667eea;
+  color: white;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.grid-body {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.grid-cell {
+  aspect-ratio: 1;
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.grid-cell:hover {
+  background: #e9ecef;
+}
+
+.grid-cell.marked {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.grid-cell.free {
+  background: #ffc107;
+  color: white;
+  border-color: #ffc107;
+  font-size: 2rem;
+}
+
+.card-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.nav-btn {
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #764ba2;
+}
+
+.nav-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.card-indicator {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.bingo-claim {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.card-id-display {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.card-id-display strong {
+  color: #667eea;
+}
+
+.bingo-hint {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.request-cards {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.request-cards h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.request-cards p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.card-count-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .grid-cell {
+    font-size: 1rem;
+  }
+
+  .header-cell {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .latest-ball-value {
+    font-size: 2rem;
+  }
+
+  .card-navigation {
+    flex-direction: column;
+  }
+
+  .nav-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .games-container {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-cell {
+    font-size: 0.875rem;
+  }
+
+  .grid-cell.free {
+    font-size: 1.5rem;
+  }
+}

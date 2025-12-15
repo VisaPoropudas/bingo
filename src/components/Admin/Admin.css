@@ -1,0 +1,153 @@
+.admin-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+  color: #666;
+}
+
+.admin-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.users-list {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.users-header {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.user-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  align-items: center;
+}
+
+.user-row:last-child {
+  border-bottom: none;
+}
+
+.user-row:hover {
+  background: #f8f9fa;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.user-email {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.role-badge.role-admin {
+  background: #dc3545;
+  color: white;
+}
+
+.role-badge.role-pitäjä {
+  background: #ffc107;
+  color: #000;
+}
+
+.role-badge.role-pelaaja {
+  background: #28a745;
+  color: white;
+}
+
+.role-select {
+  padding: 0.5rem;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.role-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.no-users {
+  padding: 2rem;
+  text-align: center;
+  color: #999;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .users-header,
+  .user-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .users-header {
+    display: none;
+  }
+
+  .user-row {
+    padding: 1rem;
+  }
+
+  .user-name {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .user-email {
+    margin-bottom: 0.5rem;
+  }
+
+  .user-role {
+    margin-bottom: 0.5rem;
+  }
+
+  .role-select {
+    width: 100%;
+  }
+}
