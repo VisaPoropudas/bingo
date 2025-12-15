@@ -56,20 +56,26 @@ npm install
 
 ### 3. Konfiguroi Firebase
 
-Muokkaa tiedostoa `src/firebase/config.js` ja korvaa Firebase-projektin tiedot:
+Kopioi `.env.example` tiedosto nimelle `.env`:
 
-```javascript
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+```bash
+cp .env.example .env
+```
+
+Muokkaa `.env` tiedostoa ja korvaa Firebase-projektin tiedot:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 ```
 
 Löydät nämä tiedot Firebase Consolesta: **Project Settings** → **Your apps** → **Web app**
+
+**HUOM:** `.env` tiedosto ei tallennu Gitiin, joten se on turvallinen paikka API-avaimille.
 
 ### 4. Firestore-tietokannan rakenne
 
@@ -148,7 +154,25 @@ npm run dev
 
 Sovellus käynnistyy osoitteessa `http://localhost:5173`
 
-### 7. Tuotantoversio
+### 7. Testaus (Playwright)
+
+Sovelluksessa on Playwright-testit, jotka varmistavat responsiivisen ulkoasun:
+
+```bash
+# Asenna Playwright-selaimet (vain kerran)
+npx playwright install chromium
+
+# Aja visuaaliset testit
+npm run test:visual
+
+# Aja kaikki testit
+npm test
+
+# Avaa testit UI-tilassa
+npm run test:ui
+```
+
+### 8. Tuotantoversio
 
 ```bash
 npm run build
