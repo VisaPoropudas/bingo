@@ -37,3 +37,4 @@ README.md
 playwright.config.js
 .env.example
 .env.example
+/.claude

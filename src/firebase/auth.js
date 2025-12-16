@@ -7,6 +7,11 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, googleProvider, db } from './config';
 
+// Lista admin-sähköposteista
+const ADMIN_EMAILS = [
+  'visa.poropudas@gmail.com'
+];
+
 // Kirjaudu Google-tilillä
 export const signInWithGoogle = async () => {
   try {
@@ -17,11 +22,14 @@ export const signInWithGoogle = async () => {
     const userDoc = await getDoc(doc(db, 'users', user.uid));
 
     if (!userDoc.exists()) {
-      // Luo uusi käyttäjä oletusroolilla "pelaaja"
+      // Määritä rooli: admin jos sähköposti on listalla, muuten pelaaja
+      const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'pelaaja';
+
+      // Luo uusi käyttäjä
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         displayName: user.displayName,
-        role: 'pelaaja',
+        role: role,
         createdAt: new Date().toISOString()
       });
     }
@@ -50,11 +58,14 @@ export const registerWithEmail = async (email, password, displayName) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
 
+    // Määritä rooli: admin jos sähköposti on listalla, muuten pelaaja
+    const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'pelaaja';
+
     // Luo käyttäjäprofiili Firestoreen
     await setDoc(doc(db, 'users', user.uid), {
       email: user.email,
       displayName: displayName,
-      role: 'pelaaja',
+      role: role,
       createdAt: new Date().toISOString()
     });
 

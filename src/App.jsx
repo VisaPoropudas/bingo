@@ -5,6 +5,7 @@ import Register from './components/Auth/Register';
 import Header from './components/Layout/Header';
 import Navigation from './components/Layout/Navigation';
 import AdminPanel from './components/Admin/AdminPanel';
+import SetupAdmin from './components/Admin/SetupAdmin';
 import HostDashboard from './components/Host/HostDashboard';
 import PlayerDashboard from './components/Player/PlayerDashboard';
 import './App.css';
@@ -23,6 +24,11 @@ function AppContent() {
   }
 
   const renderView = () => {
+    // Väliaikainen admin-setup näkymä
+    if (activeView === 'setup') {
+      return <SetupAdmin />;
+    }
+
     switch (activeView) {
       case 'admin':
         return <AdminPanel />;

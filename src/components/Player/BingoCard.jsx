@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import './Player.css';
 
-const BingoCard = ({ card, calledBalls, centerFree, onMarkCell }) => {
-  const [selectedCell, setSelectedCell] = useState(null);
+const BingoCard = ({ card, calledBalls, centerFree, autoMark, onMarkCell }) => {
+  const [manualMarks, setManualMarks] = useState(new Set());
 
   const isCellMarked = (cell) => {
     if (centerFree && cell.isFreeSpace) return true;
-    return calledBalls.includes(`${cell.column}-${cell.number}`);
+
+    const ballName = `${cell.column}-${cell.number}`;
+
+    // Automaattinen merkintä
+    if (autoMark) {
+      return calledBalls.includes(ballName);
+    }
+
+    // Manuaalinen merkintä
+    return manualMarks.has(ballName);
   };
 
   const handleCellClick = (cell) => {
@@ -16,14 +25,27 @@ const BingoCard = ({ card, calledBalls, centerFree, onMarkCell }) => {
       return; // Keskiruutu on aina merkitty
     }
 
-    if (!calledBalls.includes(ballName)) {
-      alert(`Palloa ${ballName} ei ole vielä arvottu!`);
+    // Jos automaattinen merkintä, näytä vain info
+    if (autoMark) {
+      if (calledBalls.includes(ballName)) {
+        return; // Jo merkitty automaattisesti
+      }
       return;
     }
 
-    setSelectedCell(cell);
+    // Manuaalinen merkintä - pelaaja voi klikata numeroita
+    const newMarks = new Set(manualMarks);
+    if (newMarks.has(ballName)) {
+      // Poista merkintä
+      newMarks.delete(ballName);
+    } else {
+      // Lisää merkintä
+      newMarks.add(ballName);
+    }
+    setManualMarks(newMarks);
+
     if (onMarkCell) {
-      onMarkCell(cell);
+      onMarkCell(cell, !manualMarks.has(ballName));
     }
   };
 
@@ -37,6 +59,11 @@ const BingoCard = ({ card, calledBalls, centerFree, onMarkCell }) => {
     <div className="bingo-card">
       <div className="card-header">
         <h3>Ruudukko #{card.id}</h3>
+        {!autoMark && (
+          <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+            Klikkaa numeroita merkitäksesi ne
+          </div>
+        )}
       </div>
 
       <div className="bingo-grid">
@@ -60,8 +87,11 @@ const BingoCard = ({ card, calledBalls, centerFree, onMarkCell }) => {
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
-                    className={`grid-cell ${isMarked ? 'marked' : ''} ${isFree ? 'free' : ''}`}
+                    className={`grid-cell ${isMarked ? 'marked' : ''} ${isFree ? 'free' : ''} ${!autoMark ? 'clickable' : ''}`}
                     onClick={() => handleCellClick(cell)}
+                    style={{
+                      cursor: !autoMark && !isFree ? 'pointer' : 'default'
+                    }}
                   >
                     {isFree ? '★' : cell.number}
                   </div>

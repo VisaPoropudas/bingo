@@ -31,6 +31,7 @@ const Navigation = ({ activeView, onNavigate }) => {
             ⚙️ Hallinta
           </button>
         )}
+
       </div>
     </nav>
   );

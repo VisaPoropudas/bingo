@@ -50,7 +50,7 @@ const Register = ({ onToggleLogin }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>BINGO</h1>
+        <h1>Visan BINGO</h1>
         <h2>Luo tili</h2>
 
         {error && <div className="error-message">{error}</div>}

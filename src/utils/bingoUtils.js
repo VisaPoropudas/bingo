@@ -53,7 +53,7 @@ const getRandomNumbers = (min, max, count) => {
 };
 
 // Tarkista voitto
-export const checkWin = (card, calledBalls, winConditions, centerFree) => {
+export const checkWin = (card, calledBalls, winConditions, centerFree, requiredLines = 1) => {
   // Merkitse kaikki kutsutut numerot
   const markedCard = card.cells.map(cell => ({
     ...cell,
@@ -69,45 +69,58 @@ export const checkWin = (card, calledBalls, winConditions, centerFree) => {
 
   const results = {
     hasWin: false,
-    winType: null
+    winType: null,
+    lineCount: 0,
+    lines: []
   };
 
-  // Tarkista vaaka- ja pystyrivit
-  if (winConditions.straightLine) {
-    // Vaakarivit
+  const completedLines = [];
+
+  // Tarkista vaakarivit
+  if (winConditions.horizontal) {
     for (let row = 0; row < 5; row++) {
       if (grid[row].every(cell => cell.marked)) {
-        results.hasWin = true;
-        results.winType = 'horizontal';
-        return results;
+        completedLines.push({ type: 'horizontal', index: row });
       }
     }
+  }
 
-    // Pystyrivit
+  // Tarkista pystyrivit
+  if (winConditions.vertical) {
     for (let col = 0; col < 5; col++) {
       const column = grid.map(row => row[col]);
       if (column.every(cell => cell.marked)) {
-        results.hasWin = true;
-        results.winType = 'vertical';
-        return results;
+        completedLines.push({ type: 'vertical', index: col });
       }
     }
+  }
 
-    // Diagonaalit
+  // Tarkista diagonaalit
+  if (winConditions.diagonal) {
     const diagonal1 = [grid[0][0], grid[1][1], grid[2][2], grid[3][3], grid[4][4]];
     const diagonal2 = [grid[0][4], grid[1][3], grid[2][2], grid[3][1], grid[4][0]];
 
     if (diagonal1.every(cell => cell.marked)) {
-      results.hasWin = true;
-      results.winType = 'diagonal';
-      return results;
+      completedLines.push({ type: 'diagonal', index: 1 });
     }
 
     if (diagonal2.every(cell => cell.marked)) {
-      results.hasWin = true;
-      results.winType = 'diagonal';
-      return results;
+      completedLines.push({ type: 'diagonal', index: 2 });
     }
+  }
+
+  // Tarkista onko tarpeeksi linjoja
+  if (completedLines.length >= requiredLines) {
+    results.hasWin = true;
+    results.lineCount = completedLines.length;
+    results.lines = completedLines;
+
+    // Aseta winType ensimmäisen linjan mukaan
+    if (completedLines.length > 0) {
+      results.winType = completedLines[0].type;
+    }
+
+    return results;
   }
 
   // Tarkista kulmat
@@ -128,6 +141,10 @@ export const checkWin = (card, calledBalls, winConditions, centerFree) => {
       return results;
     }
   }
+
+  // Palauta linjamäärä vaikka ei voittoa
+  results.lineCount = completedLines.length;
+  results.lines = completedLines;
 
   return results;
 };

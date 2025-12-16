@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-content">
-        <h1 className="app-title">🎱 BINGO</h1>
+        <h1 className="app-title">🎱 Visan BINGO</h1>
         {currentUser && (
           <div className="header-user">
             <div className="user-info">
