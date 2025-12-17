@@ -38,3 +38,4 @@ playwright.config.js
 .env.example
 .env.example
 /.claude
+*.cache
