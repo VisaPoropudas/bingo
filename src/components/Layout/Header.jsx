@@ -1,5 +1,6 @@
 import { signOut } from '../../firebase/auth';
 import { useAuth } from '../../contexts/AuthContext';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 import './Layout.css';
 
 const Header = () => {
@@ -14,7 +15,7 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-content">
-        <h1 className="app-title">🎱 Visan BINGO</h1>
+        <h1 className="app-title">Visan BINGO</h1>
         {currentUser && (
           <div className="header-user">
             <div className="user-info">
@@ -26,7 +27,7 @@ const Header = () => {
               </span>
             </div>
             <button onClick={handleSignOut} className="sign-out-btn">
-              Kirjaudu ulos
+              <BoxArrowRight size={16} /> Kirjaudu ulos
             </button>
           </div>
         )}

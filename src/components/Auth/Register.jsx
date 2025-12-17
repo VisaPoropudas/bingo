@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { signInWithGoogle, registerWithEmail } from '../../firebase/auth';
+import { Google } from 'react-bootstrap-icons';
 import './Auth.css';
 
 const Register = ({ onToggleLogin }) => {
@@ -60,7 +61,7 @@ const Register = ({ onToggleLogin }) => {
           onClick={handleGoogleSignIn}
           disabled={loading}
         >
-          <span>🔐</span> Jatka Google-tilillä
+          <Google size={20} /> Jatka Google-tilillä
         </button>
 
         <div className="divider">

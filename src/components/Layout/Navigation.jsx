@@ -1,4 +1,5 @@
 import { useAuth } from '../../contexts/AuthContext';
+import { Controller, Bullseye, GearFill } from 'react-bootstrap-icons';
 import './Layout.css';
 
 const Navigation = ({ activeView, onNavigate }) => {
@@ -11,7 +12,7 @@ const Navigation = ({ activeView, onNavigate }) => {
           className={`nav-btn ${activeView === 'player' ? 'active' : ''}`}
           onClick={() => onNavigate('player')}
         >
-          🎮 Pelaa
+          <Controller size={18} /> Pelaa
         </button>
 
         {isHost && (
@@ -19,7 +20,7 @@ const Navigation = ({ activeView, onNavigate }) => {
             className={`nav-btn ${activeView === 'host' ? 'active' : ''}`}
             onClick={() => onNavigate('host')}
           >
-            🎯 Pitäjä
+            <Bullseye size={18} /> Pitäjä
           </button>
         )}
 
@@ -28,7 +29,7 @@ const Navigation = ({ activeView, onNavigate }) => {
             className={`nav-btn ${activeView === 'admin' ? 'active' : ''}`}
             onClick={() => onNavigate('admin')}
           >
-            ⚙️ Hallinta
+            <GearFill size={18} /> Hallinta
           </button>
         )}
 

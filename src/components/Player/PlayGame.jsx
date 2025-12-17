@@ -6,6 +6,7 @@ import BingoCard from './BingoCard';
 import { QRCodeSVG } from 'qrcode.react';
 import { useSwipeable } from 'react-swipeable';
 import { Container, Card, Button, Badge, Alert } from 'react-bootstrap';
+import { QrCodeScan } from 'react-bootstrap-icons';
 import './Player.css';
 
 const PlayGame = ({ gameId, onLeaveGame }) => {
@@ -324,7 +325,7 @@ const PlayGame = ({ gameId, onLeaveGame }) => {
           </div>
 
           <Alert variant="success" className="mb-0">
-            <strong>🎉 BINGO?</strong><br />
+            <strong><QrCodeScan size={20} /> BINGO?</strong><br />
             Näytä QR-koodi tai kerro tunniste pitäjälle!
           </Alert>
         </Card.Body>

@@ -101,14 +101,14 @@ const drawBingoCard = async (doc, card, position, cardsPerPage) => {
   const headerHeight = 7;
   const letters = ['B', 'I', 'N', 'G', 'O'];
 
-  doc.setFillColor(102, 126, 234); // Purple color #667eea
+  doc.setFillColor(30, 58, 95); // Navy blue #1e3a5f
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
 
   for (let i = 0; i < letters.length; i++) {
     const cellX = gridStartX + (i * cellSize);
-    doc.setFillColor(102, 126, 234); // Ensure consistent purple
+    doc.setFillColor(30, 58, 95); // Consistent navy blue
     doc.rect(cellX, gridStartY, cellSize, headerHeight, 'F');
     doc.setTextColor(255, 255, 255);
     doc.text(letters[i], cellX + cellSize / 2, gridStartY + 6, { align: 'center' });
@@ -140,7 +140,7 @@ const drawBingoCard = async (doc, card, position, cardsPerPage) => {
 
       // Fill and draw free space
       if (cell.isFreeSpace) {
-        doc.setFillColor(255, 193, 7); // Yellow #ffc107
+        doc.setFillColor(218, 165, 32); // Gold #DAA520
         doc.rect(cellX, cellY, cellSize, cellSize, 'F');
 
         // Draw star image

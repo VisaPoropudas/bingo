@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-dark) 100%);
   padding: 1rem;
 }
 
@@ -18,7 +18,7 @@
 
 .auth-card h1 {
   text-align: center;
-  color: #667eea;
+  color: var(--primary-main);
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   font-weight: bold;
@@ -115,13 +115,13 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-main);
 }
 
 .submit-btn {
   width: 100%;
   padding: 0.875rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-main) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -153,7 +153,7 @@
 .link-btn {
   background: none;
   border: none;
-  color: #667eea;
+  color: var(--primary-main);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -162,7 +162,7 @@
 }
 
 .link-btn:hover {
-  color: #764ba2;
+  color: var(--primary-dark);
 }
 
 /* Mobile optimizations */

@@ -4,6 +4,7 @@ import { db } from '../../firebase/config';
 import { drawBall, checkWin } from '../../utils/bingoUtils';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { generateBingoCardsPDF, downloadPDF } from '../../utils/pdfGenerator';
+import { CircleFill, CheckCircleFill, CameraFill, PrinterFill } from 'react-bootstrap-icons';
 import './Host.css';
 
 const GameControl = ({ gameId }) => {
@@ -288,7 +289,7 @@ const GameControl = ({ gameId }) => {
               onClick={handleDrawBall}
               disabled={ballsRemaining === 0}
             >
-              🎱 Arvo pallo
+              <CircleFill size={18} /> Arvo pallo
             </button>
             <button className="btn btn-danger" onClick={handleEndGame}>
               Lopeta peli
@@ -335,7 +336,7 @@ const GameControl = ({ gameId }) => {
               onClick={() => handleCheckCard()}
               disabled={!checkCardId.trim()}
             >
-              ✓ Tarkista
+              <CheckCircleFill size={18} /> Tarkista
             </button>
           </div>
         </div>
@@ -346,7 +347,7 @@ const GameControl = ({ gameId }) => {
             className={`btn ${showScanner ? 'btn-secondary' : 'btn-primary'} w-100`}
             onClick={() => setShowScanner(!showScanner)}
           >
-            {showScanner ? '📷 Sulje kamera' : '📷 Skannaa QR-koodi'}
+            <CameraFill size={18} /> {showScanner ? 'Sulje kamera' : 'Skannaa QR-koodi'}
           </button>
         </div>
 
@@ -454,7 +455,7 @@ const GameControl = ({ gameId }) => {
               onClick={() => setShowPrintSettings(true)}
               style={{ marginBottom: '1rem' }}
             >
-              🖨️ Tulosta kortit
+              <PrinterFill size={18} /> Tulosta kortit
             </button>
           ) : (
             <div className="print-settings-panel" style={{

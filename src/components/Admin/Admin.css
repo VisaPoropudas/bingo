@@ -103,7 +103,7 @@
 
 .role-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-main);
 }
 
 .no-users {

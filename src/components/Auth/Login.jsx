@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { signInWithGoogle, signInWithEmail } from '../../firebase/auth';
+import { Google } from 'react-bootstrap-icons';
 import './Auth.css';
 
 const Login = ({ onToggleRegister }) => {
@@ -47,7 +48,7 @@ const Login = ({ onToggleRegister }) => {
           onClick={handleGoogleSignIn}
           disabled={loading}
         >
-          <span>🔐</span> Kirjaudu Google-tilillä
+          <Google size={20} /> Kirjaudu Google-tilillä
         </button>
 
         <div className="divider">

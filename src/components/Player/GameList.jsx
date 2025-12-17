@@ -80,11 +80,11 @@ const GameList = ({ onJoinGame }) => {
                     <ListGroup.Item className="px-0">
                       <small className="text-muted d-block mb-2">Voittotavat:</small>
                       <div className="d-flex flex-wrap gap-1">
-                        {game.winConditions?.horizontal && <Badge bg="info">Vaakarivit</Badge>}
-                        {game.winConditions?.vertical && <Badge bg="info">Pystyrivit</Badge>}
-                        {game.winConditions?.diagonal && <Badge bg="info">Diagonaalit</Badge>}
-                        {game.winConditions?.corners && <Badge bg="info">Kulmat</Badge>}
-                        {game.winConditions?.fullCard && <Badge bg="info">Koko ruudukko</Badge>}
+                        {game.winConditions?.horizontal && <Badge bg="secondary">Vaakarivit</Badge>}
+                        {game.winConditions?.vertical && <Badge bg="secondary">Pystyrivit</Badge>}
+                        {game.winConditions?.diagonal && <Badge bg="secondary">Diagonaalit</Badge>}
+                        {game.winConditions?.corners && <Badge bg="secondary">Kulmat</Badge>}
+                        {game.winConditions?.fullCard && <Badge bg="secondary">Koko ruudukko</Badge>}
                       </div>
                     </ListGroup.Item>
                     {game.requiredLines > 1 && (
