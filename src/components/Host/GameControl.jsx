@@ -571,13 +571,14 @@ const GameControl = ({ gameId }) => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #0A1929 0%, #1e3a5f 100%)',
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: '2rem'
+          padding: '2rem',
+          overflow: 'auto'
         }}>
           {/* Close button */}
           <button
@@ -586,28 +587,35 @@ const GameControl = ({ gameId }) => {
               position: 'absolute',
               top: '2rem',
               right: '2rem',
-              background: 'rgba(255,255,255,0.2)',
-              border: '2px solid white',
-              color: 'white',
-              padding: '1rem 2rem',
-              fontSize: '1.2rem',
+              background: 'rgba(218, 165, 32, 0.3)',
+              border: '2px solid #DAA520',
+              color: '#DAA520',
+              padding: '0.75rem 1.5rem',
+              fontSize: '1rem',
               fontWeight: 'bold',
               borderRadius: '12px',
               cursor: 'pointer',
               transition: 'all 0.3s ease'
             }}
-            onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
-            onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(218, 165, 32, 0.5)';
+              e.target.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(218, 165, 32, 0.3)';
+              e.target.style.color = '#DAA520';
+            }}
           >
-            ✕ Sulje näyttötila
+            ✕ {/*Sulje näyttötila*/}
           </button>
 
           {/* Game name */}
           <h1 style={{
-            color: 'white',
+            color: '#DAA520',
             fontSize: '3rem',
-            marginBottom: '3rem',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+            marginBottom: '2rem',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontWeight: 'bold'
           }}>
             {game.name}
           </h1>
@@ -616,26 +624,32 @@ const GameControl = ({ gameId }) => {
           <div style={{
             background: 'white',
             borderRadius: '50%',
-            width: '400px',
-            height: '400px',
+            minWidth: '350px',
+            minHeight: '350px',
+            width: '350px',
+            height: '350px',
+            maxWidth: '350px',
+            maxHeight: '350px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: '3rem',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-            border: '8px solid rgba(255,255,255,0.5)'
+            marginBottom: '2rem',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 8px #DAA520',
+            flexShrink: 0
           }}>
             {calledBalls.length > 0 ? (
               <>
-
-                <div style={{ fontSize: '8rem', fontWeight: 'bold', color: '#667eea' }}>
+                {/*<div style={{ fontSize: '1.2rem', color: '#1e3a5f', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Viimeisin pallo
+                </div>*/}
+                <div style={{ fontSize: '6rem', fontWeight: 'bold', color: '#1e3a5f', lineHeight: 1 }}>
                   {currentBall || calledBalls[calledBalls.length - 1]}
                 </div>
               </>
             ) : (
-              <div style={{ fontSize: '8rem', color: '#999', textAlign: 'center', padding: '2rem' }}>
-                -
+              <div style={{ fontSize: '2rem', color: '#999', textAlign: 'center', padding: '2rem' }}>
+                - {/*Ei vielä arvottuja palloja*/}
               </div>
             )}
           </div>
@@ -645,45 +659,52 @@ const GameControl = ({ gameId }) => {
             onClick={handleDrawBall}
             disabled={ballsRemaining === 0}
             style={{
-              background: ballsRemaining === 0 ? '#ccc' : '#28a745',
+              background: ballsRemaining === 0 ? '#666' : 'linear-gradient(135deg, #DAA520 0%, #B8860B 100%)',
               border: 'none',
-              color: 'white',
-              padding: '2rem 4rem',
-              fontSize: '2.5rem',
+              color: ballsRemaining === 0 ? '#999' : '#0A1929',
+              padding: '1.25rem 2.5rem',
+              fontSize: '1.75rem',
               fontWeight: 'bold',
-              borderRadius: '20px',
+              borderRadius: '16px',
               cursor: ballsRemaining === 0 ? 'not-allowed' : 'pointer',
-              marginBottom: '3rem',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+              marginBottom: '2rem',
+              boxShadow: ballsRemaining === 0 ? 'none' : '0 8px 24px rgba(218, 165, 32, 0.4)',
               transition: 'all 0.3s ease',
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem'
+              gap: '0.75rem'
             }}
             onMouseEnter={(e) => {
-              if (ballsRemaining > 0) e.target.style.transform = 'scale(1.05)';
+              if (ballsRemaining > 0) {
+                e.target.style.transform = 'scale(1.05)';
+                e.target.style.boxShadow = '0 12px 32px rgba(218, 165, 32, 0.6)';
+              }
             }}
             onMouseLeave={(e) => {
-              if (ballsRemaining > 0) e.target.style.transform = 'scale(1)';
+              if (ballsRemaining > 0) {
+                e.target.style.transform = 'scale(1)';
+                e.target.style.boxShadow = '0 8px 24px rgba(218, 165, 32, 0.4)';
+              }
             }}
           >
-            <CircleFill size={40} /> ARVO PALLO
+            <CircleFill size={28} /> ARVO PALLO
           </button>
 
           {/* Recent 10 balls */}
           <div style={{
-            background: 'rgba(255,255,255,0.15)',
+            background: 'rgba(30, 58, 95, 0.6)',
             backdropFilter: 'blur(10px)',
             borderRadius: '20px',
-            padding: '2rem 3rem',
+            padding: '1.5rem 2rem',
             minWidth: '60%',
-            border: '2px solid rgba(255,255,255,0.3)'
+            border: '2px solid rgba(218, 165, 32, 0.4)'
           }}>
             <h3 style={{
-              color: 'white',
-              fontSize: '2rem',
-              marginBottom: '1.5rem',
-              textAlign: 'center'
+              color: '#DAA520',
+              fontSize: '1.75rem',
+              marginBottom: '1.25rem',
+              textAlign: 'center',
+              fontWeight: 'bold'
             }}>
               Viimeisimmät pallot
             </h3>
@@ -693,21 +714,27 @@ const GameControl = ({ gameId }) => {
               gap: '1rem',
               justifyItems: 'center'
             }}>
-              {calledBalls.slice(-10).reverse().map((ball, index) => (
+              {calledBalls.slice(-11, -1).reverse().map((ball, index) => (
                 <div
                   key={index}
                   style={{
                     background: 'white',
                     borderRadius: '50%',
-                    width: '120px',
-                    height: '120px',
+                    minWidth: '100px',
+                    minHeight: '100px',
+                    width: '100px',
+                    height: '100px',
+                    maxWidth: '100px',
+                    maxHeight: '100px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    fontSize: '2.5rem',
+                    fontSize: '2rem',
                     fontWeight: 'bold',
-                    color: '#667eea',
-                    boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
+                    color: '#1e3a5f',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    border: '3px solid #DAA520',
+                    flexShrink: 0
                   }}
                 >
                   {ball}
@@ -716,7 +743,7 @@ const GameControl = ({ gameId }) => {
               {calledBalls.length === 0 && (
                 <div style={{
                   gridColumn: '1 / -1',
-                  color: 'white',
+                  color: '#DAA520',
                   fontSize: '1.5rem',
                   textAlign: 'center',
                   padding: '2rem'
@@ -729,10 +756,11 @@ const GameControl = ({ gameId }) => {
 
           {/* Stats */}
           <div style={{
-            color: 'white',
-            fontSize: '1.5rem',
-            marginTop: '2rem',
-            textAlign: 'center'
+            color: '#DAA520',
+            fontSize: '1.25rem',
+            marginTop: '1.5rem',
+            textAlign: 'center',
+            fontWeight: '600'
           }}>
             Arvottuja palloja: {calledBalls.length} / 75 | Jäljellä: {ballsRemaining}
           </div>
