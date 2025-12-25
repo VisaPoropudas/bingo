@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import { drawBall, checkWin } from '../../utils/bingoUtils';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { generateBingoCardsPDF, downloadPDF } from '../../utils/pdfGenerator';
-import { CircleFill, CheckCircleFill, CameraFill, PrinterFill } from 'react-bootstrap-icons';
+import { CircleFill, CheckCircleFill, CameraFill, PrinterFill, TvFill } from 'react-bootstrap-icons';
 import './Host.css';
 
 const GameControl = ({ gameId }) => {
@@ -18,6 +18,7 @@ const GameControl = ({ gameId }) => {
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const [printLoading, setPrintLoading] = useState(false);
   const [ballSortOrder, setBallSortOrder] = useState('straight'); // 'straight', 'reversed', 'numeric'
+  const [showCastingMode, setShowCastingMode] = useState(false);
 
   useEffect(() => {
     loadGame();
@@ -316,6 +317,13 @@ const GameControl = ({ gameId }) => {
             >
               <CircleFill size={18} /> Arvo pallo
             </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowCastingMode(true)}
+              style={{ background: '#6f42c1' }}
+            >
+              <TvFill size={18} /> Näyttötila
+            </button>
             <button className="btn btn-danger" onClick={handleEndGame}>
               Lopeta peli
             </button>
@@ -554,6 +562,182 @@ const GameControl = ({ gameId }) => {
           )}
         </div>
       </div>
+
+      {/* Casting Mode Modal */}
+      {showCastingMode && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '2rem'
+        }}>
+          {/* Close button */}
+          <button
+            onClick={() => setShowCastingMode(false)}
+            style={{
+              position: 'absolute',
+              top: '2rem',
+              right: '2rem',
+              background: 'rgba(255,255,255,0.2)',
+              border: '2px solid white',
+              color: 'white',
+              padding: '1rem 2rem',
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
+            onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+          >
+            ✕ Sulje näyttötila
+          </button>
+
+          {/* Game name */}
+          <h1 style={{
+            color: 'white',
+            fontSize: '3rem',
+            marginBottom: '3rem',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+          }}>
+            {game.name}
+          </h1>
+
+          {/* Current/Last ball - Large display */}
+          <div style={{
+            background: 'white',
+            borderRadius: '50%',
+            width: '400px',
+            height: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: '3rem',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            border: '8px solid rgba(255,255,255,0.5)'
+          }}>
+            {calledBalls.length > 0 ? (
+              <>
+
+                <div style={{ fontSize: '8rem', fontWeight: 'bold', color: '#667eea' }}>
+                  {currentBall || calledBalls[calledBalls.length - 1]}
+                </div>
+              </>
+            ) : (
+              <div style={{ fontSize: '8rem', color: '#999', textAlign: 'center', padding: '2rem' }}>
+                -
+              </div>
+            )}
+          </div>
+
+          {/* Draw ball button */}
+          <button
+            onClick={handleDrawBall}
+            disabled={ballsRemaining === 0}
+            style={{
+              background: ballsRemaining === 0 ? '#ccc' : '#28a745',
+              border: 'none',
+              color: 'white',
+              padding: '2rem 4rem',
+              fontSize: '2.5rem',
+              fontWeight: 'bold',
+              borderRadius: '20px',
+              cursor: ballsRemaining === 0 ? 'not-allowed' : 'pointer',
+              marginBottom: '3rem',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem'
+            }}
+            onMouseEnter={(e) => {
+              if (ballsRemaining > 0) e.target.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              if (ballsRemaining > 0) e.target.style.transform = 'scale(1)';
+            }}
+          >
+            <CircleFill size={40} /> ARVO PALLO
+          </button>
+
+          {/* Recent 10 balls */}
+          <div style={{
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '20px',
+            padding: '2rem 3rem',
+            minWidth: '60%',
+            border: '2px solid rgba(255,255,255,0.3)'
+          }}>
+            <h3 style={{
+              color: 'white',
+              fontSize: '2rem',
+              marginBottom: '1.5rem',
+              textAlign: 'center'
+            }}>
+              Viimeisimmät pallot
+            </h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '1rem',
+              justifyItems: 'center'
+            }}>
+              {calledBalls.slice(-10).reverse().map((ball, index) => (
+                <div
+                  key={index}
+                  style={{
+                    background: 'white',
+                    borderRadius: '50%',
+                    width: '120px',
+                    height: '120px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '2.5rem',
+                    fontWeight: 'bold',
+                    color: '#667eea',
+                    boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  {ball}
+                </div>
+              ))}
+              {calledBalls.length === 0 && (
+                <div style={{
+                  gridColumn: '1 / -1',
+                  color: 'white',
+                  fontSize: '1.5rem',
+                  textAlign: 'center',
+                  padding: '2rem'
+                }}>
+                  -
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div style={{
+            color: 'white',
+            fontSize: '1.5rem',
+            marginTop: '2rem',
+            textAlign: 'center'
+          }}>
+            Arvottuja palloja: {calledBalls.length} / 75 | Jäljellä: {ballsRemaining}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
