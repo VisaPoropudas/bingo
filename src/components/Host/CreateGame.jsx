@@ -5,16 +5,13 @@ import { useAuth } from '../../contexts/AuthContext';
 import { generateBingoCard } from '../../utils/bingoUtils';
 import './Host.css';
 
-// Generoi lyhyt 5-merkkinen ID (esim. A1B2C, XY789)
-const generateShortId = (index) => {
+// Generoi satunnainen 5-merkkinen ID (esim. K3X9M, B7Q2N)
+const generateShortId = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let id = '';
-  let num = index;
 
-  // Muunna numero 5-merkkiseksi base-36 tunnisteeksi
   for (let i = 0; i < 5; i++) {
-    id = chars[num % chars.length] + id;
-    num = Math.floor(num / chars.length);
+    id += chars[Math.floor(Math.random() * chars.length)];
   }
 
   return id;
@@ -80,9 +77,16 @@ const CreateGame = ({ onGameCreated }) => {
 
       // Generoi BINGO-kortit
       const cards = [];
+      const usedIds = new Set();
+
       for (let i = 0; i < cardCount; i++) {
-        // Luo lyhyt 5-merkkinen tunniste (A-Z, 0-9)
-        const cardId = generateShortId(i);
+        // Luo uniikki satunnainen 5-merkkinen tunniste (A-Z, 0-9)
+        let cardId;
+        do {
+          cardId = generateShortId();
+        } while (usedIds.has(cardId));
+        usedIds.add(cardId);
+
         const card = generateBingoCard(cardId);
 
         await setDoc(doc(db, 'games', gameRef.id, 'cards', cardId), {

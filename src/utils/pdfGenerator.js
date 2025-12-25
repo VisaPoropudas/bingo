@@ -55,14 +55,14 @@ export const generateBingoCardsPDF = async (cards, cardsPerPage = 2, gameName = 
     const pageCards = cards.slice(i, i + cardsPerPage);
 
     for (let j = 0; j < pageCards.length; j++) {
-      await drawBingoCard(doc, pageCards[j], j, cardsPerPage);
+      await drawBingoCard(doc, pageCards[j], j, cardsPerPage, gameName);
     }
   }
 
   return doc;
 };
 
-const drawBingoCard = async (doc, card, position, cardsPerPage) => {
+const drawBingoCard = async (doc, card, position, cardsPerPage, gameName) => {
   const margin = 8;
   const cardWidth = (A4_WIDTH_LANDSCAPE - (margin * (cardsPerPage + 1))) / cardsPerPage;
   const cardHeight = A4_HEIGHT_LANDSCAPE - (2 * margin);
@@ -75,16 +75,22 @@ const drawBingoCard = async (doc, card, position, cardsPerPage) => {
   doc.setLineWidth(0.5);
   doc.rect(x, y, cardWidth, cardHeight);
 
+  // Game Name
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 0, 0);
+  doc.text(gameName, x + cardWidth / 2, y + 7, { align: 'center' });
+
   // Title
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(0, 0, 0);
-  doc.text('BINGO', x + cardWidth / 2, y + 10, { align: 'center' });
+  doc.text('BINGO', x + cardWidth / 2, y + 13, { align: 'center' });
 
   // Card ID
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Kortti: ${card.id}`, x + cardWidth / 2, y + 16, { align: 'center' });
+  doc.text(`Kortti: ${card.id}`, x + cardWidth / 2, y + 19, { align: 'center' });
 
   // Calculate grid dimensions
   const gridStartY = y + 22;

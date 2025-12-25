@@ -17,6 +17,7 @@ const GameControl = ({ gameId }) => {
   const [showPrintSettings, setShowPrintSettings] = useState(false);
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const [printLoading, setPrintLoading] = useState(false);
+  const [ballSortOrder, setBallSortOrder] = useState('straight'); // 'straight', 'reversed', 'numeric'
 
   useEffect(() => {
     loadGame();
@@ -107,12 +108,12 @@ const GameControl = ({ gameId }) => {
     }
 
     try {
-      // Hae ruudukko
+      // Hae ruudukko tästä pelistä
       let cardDoc = await getDoc(doc(db, 'games', gameId, 'cards', cardId));
 
-      // Jos ei löydy, yritä etsiä kaikista korteista ID:n perusteella
+      // Jos ei löydy, yritä etsiä kaikista tämän pelin korteista ID:n perusteella
       if (!cardDoc.exists()) {
-        console.log(`Card ${cardId} not found directly, searching all cards...`);
+        console.log(`Card ${cardId} not found directly, searching all cards in this game...`);
         const cardsRef = collection(db, 'games', gameId, 'cards');
         const cardsSnapshot = await getDocs(cardsRef);
 
@@ -226,6 +227,30 @@ const GameControl = ({ gameId }) => {
   const calledBalls = game.calledBalls || [];
   const ballsRemaining = 75 - calledBalls.length;
 
+  // Sort balls based on selected order
+  const getSortedBalls = () => {
+    const balls = [...calledBalls];
+
+    switch (ballSortOrder) {
+      case 'reversed':
+        return balls.reverse();
+
+      case 'numeric':
+        return balls.sort((a, b) => {
+          // Extract numeric values from "B-7" format
+          const numA = parseInt(a.split('-')[1]);
+          const numB = parseInt(b.split('-')[1]);
+          return numA - numB;
+        });
+
+      case 'straight':
+      default:
+        return balls; // Original pickup order
+    }
+  };
+
+  const sortedBalls = getSortedBalls();
+
   return (
     <div className="game-control">
       <div className="game-header">
@@ -299,9 +324,33 @@ const GameControl = ({ gameId }) => {
       </div>
 
       <div className="called-balls-section">
-        <h3>Arvotut pallot ({calledBalls.length})</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h3 style={{ margin: 0 }}>Arvotut pallot ({calledBalls.length})</h3>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <label htmlFor="ballSort" style={{ fontSize: '0.9rem', fontWeight: '500' }}>
+              Järjestys:
+            </label>
+            <select
+              id="ballSort"
+              value={ballSortOrder}
+              onChange={(e) => setBallSortOrder(e.target.value)}
+              style={{
+                padding: '0.4rem 0.8rem',
+                fontSize: '0.9rem',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+                background: 'white',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="straight">Nostojärjestys</option>
+              <option value="reversed">Käänteinen nostojärjestys</option>
+              <option value="numeric">Numeerinen järjestys</option>
+            </select>
+          </div>
+        </div>
         <div className="called-balls">
-          {calledBalls.map((ball, index) => (
+          {sortedBalls.map((ball, index) => (
             <div key={index} className="ball-item">
               <span className="ball-number">{index + 1}.</span>
               <span className="ball-name">{ball}</span>
