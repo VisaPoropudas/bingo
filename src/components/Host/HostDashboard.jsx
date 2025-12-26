@@ -47,7 +47,10 @@ const HostDashboard = () => {
       <div className="host-dashboard">
         <button
           className="back-btn"
-          onClick={() => setSelectedGame(null)}
+          onClick={() => {
+            setSelectedGame(null);
+            loadGames(); // Reload games to get updated status
+          }}
         >
           ← Takaisin peleihin
         </button>

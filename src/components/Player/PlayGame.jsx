@@ -80,7 +80,14 @@ const PlayGame = ({ gameId, onLeaveGame }) => {
         alert(`Vain ${availableCardsSnapshot.docs.length} korttia saatavilla`);
       }
 
-      const cardsToAssign = availableCardsSnapshot.docs.slice(0, count);
+      // Randomize card selection using Fisher-Yates shuffle
+      const availableCards = [...availableCardsSnapshot.docs];
+      for (let i = availableCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availableCards[i], availableCards[j]] = [availableCards[j], availableCards[i]];
+      }
+
+      const cardsToAssign = availableCards.slice(0, count);
 
       // Merkitse kortit pelaajalle
       for (const cardDoc of cardsToAssign) {

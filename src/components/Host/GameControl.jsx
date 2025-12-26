@@ -4,7 +4,8 @@ import { db } from '../../firebase/config';
 import { drawBall, checkWin } from '../../utils/bingoUtils';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { generateBingoCardsPDF, downloadPDF } from '../../utils/pdfGenerator';
-import { CircleFill, CheckCircleFill, CameraFill, PrinterFill, TvFill } from 'react-bootstrap-icons';
+import { CircleFill, CheckCircleFill, CameraFill, PrinterFill, TvFill, ArrowsFullscreen, FullscreenExit } from 'react-bootstrap-icons';
+import { QRCodeSVG } from 'qrcode.react';
 import './Host.css';
 
 const GameControl = ({ gameId }) => {
@@ -17,8 +18,10 @@ const GameControl = ({ gameId }) => {
   const [showPrintSettings, setShowPrintSettings] = useState(false);
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const [printLoading, setPrintLoading] = useState(false);
+  const [excludeAssignedCards, setExcludeAssignedCards] = useState(true);
   const [ballSortOrder, setBallSortOrder] = useState('straight'); // 'straight', 'reversed', 'numeric'
   const [showCastingMode, setShowCastingMode] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     loadGame();
@@ -193,10 +196,21 @@ const GameControl = ({ gameId }) => {
         return;
       }
 
-      const cards = cardsSnapshot.docs.map(doc => ({
+      let cards = cardsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+
+      // Filter out assigned cards if option is enabled
+      if (excludeAssignedCards) {
+        cards = cards.filter(card => !card.assigned);
+      }
+
+      if (cards.length === 0) {
+        alert('Ei tulostettavia kortteja (kaikki kortit on jo jaettu pelaajille)');
+        setPrintLoading(false);
+        return;
+      }
 
       console.log(`Generating PDF for ${cards.length} cards...`);
 
@@ -207,7 +221,8 @@ const GameControl = ({ gameId }) => {
       const filename = `${game.name.replace(/\s+/g, '-')}-kortit.pdf`;
       downloadPDF(pdf, filename);
 
-      alert(`PDF ladattu! ${cards.length} korttia, ${cardsPerPage} korttia per sivu.`);
+      const excludeMsg = excludeAssignedCards ? ' (pelissä olevat kortit poistettu)' : '';
+      alert(`PDF ladattu! ${cards.length} korttia${excludeMsg}, ${cardsPerPage} korttia per sivu.`);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('PDF:n luonti epäonnistui: ' + error.message);
@@ -216,6 +231,32 @@ const GameControl = ({ gameId }) => {
       setShowPrintSettings(false);
     }
   };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+      }).catch(err => {
+        console.error('Error attempting to enable fullscreen:', err);
+      });
+    } else {
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+      }).catch(err => {
+        console.error('Error attempting to exit fullscreen:', err);
+      });
+    }
+  };
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   if (loading) {
     return <div className="loading">Ladataan peliä...</div>;
@@ -538,6 +579,21 @@ const GameControl = ({ gameId }) => {
                 </select>
               </div>
 
+              <div className="form-group" style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={excludeAssignedCards}
+                    onChange={(e) => setExcludeAssignedCards(e.target.checked)}
+                    style={{ width: '1.2rem', height: '1.2rem', cursor: 'pointer' }}
+                  />
+                  <span>Poista jo pelaajille jaetut kortit (suositeltu hybridipelissä)</span>
+                </label>
+                <small style={{ display: 'block', marginTop: '0.5rem', color: '#666', marginLeft: '1.7rem' }}>
+                  Tulostaa vain ne kortit, joita ei ole vielä jaettu digitaalisesti pelaajille
+                </small>
+              </div>
+
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
                   className="btn btn-success"
@@ -580,6 +636,40 @@ const GameControl = ({ gameId }) => {
           padding: '2rem',
           overflow: 'auto'
         }}>
+          {/* Fullscreen toggle button */}
+          <button
+            onClick={toggleFullscreen}
+            style={{
+              position: 'absolute',
+              top: '2rem',
+              right: '6.5rem',
+              background: 'rgba(218, 165, 32, 0.3)',
+              border: '2px solid #DAA520',
+              color: '#DAA520',
+              padding: '0.75rem 1.5rem',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              minHeight: '51px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(218, 165, 32, 0.5)';
+              e.target.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(218, 165, 32, 0.3)';
+              e.target.style.color = '#DAA520';
+            }}
+          >
+            {isFullscreen ? <FullscreenExit size={20} /> : <ArrowsFullscreen size={20} />}
+            {/*isFullscreen ? 'Poistu koko näytöstä' : 'Koko näyttö'*/}
+          </button>
+
           {/* Close button */}
           <button
             onClick={() => setShowCastingMode(false)}
@@ -613,46 +703,99 @@ const GameControl = ({ gameId }) => {
           <h1 style={{
             color: '#DAA520',
             fontSize: '3rem',
+            textAlign: 'center',
             marginBottom: '2rem',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            maxWidth: '50%'
           }}>
             {game.name}
           </h1>
 
-          {/* Current/Last ball - Large display */}
-          <div style={{
-            background: 'white',
-            borderRadius: '50%',
-            minWidth: '350px',
-            minHeight: '350px',
-            width: '350px',
-            height: '350px',
-            maxWidth: '350px',
-            maxHeight: '350px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: '2rem',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 8px #DAA520',
-            flexShrink: 0
-          }}>
-            {calledBalls.length > 0 ? (
-              <>
-                {/*<div style={{ fontSize: '1.2rem', color: '#1e3a5f', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Viimeisin pallo
-                </div>*/}
-                <div style={{ fontSize: '6rem', fontWeight: 'bold', color: '#1e3a5f', lineHeight: 1 }}>
-                  {currentBall || calledBalls[calledBalls.length - 1]}
-                </div>
-              </>
-            ) : (
-              <div style={{ fontSize: '2rem', color: '#999', textAlign: 'center', padding: '2rem' }}>
-                - {/*Ei vielä arvottuja palloja*/}
+          {/* Join Game QR Code or Current/Last ball display */}
+          {calledBalls.length === 0 ? (
+            // Join Game section - shown before any balls are drawn
+            <div style={{
+              background: 'rgba(30, 58, 95, 0.8)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '24px',
+              padding: '3rem',
+              marginBottom: '2rem',
+              border: '3px solid #DAA520',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              maxWidth: '600px'
+            }}>
+              <h2 style={{
+                color: '#DAA520',
+                fontSize: '2.5rem',
+                marginBottom: '1.5rem',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}>
+                Liity peliin
+              </h2>
+
+              <div style={{
+                background: 'white',
+                padding: '2rem',
+                borderRadius: '16px',
+                marginBottom: '1.5rem'
+              }}>
+                <QRCodeSVG
+                  value="https://visan-bingo.web.app"
+                  size={280}
+                  level="M"
+                  includeMargin={true}
+                />
               </div>
-            )}
-          </div>
+
+              <div style={{
+                color: 'white',
+                fontSize: '1.5rem',
+                textAlign: 'center',
+                marginBottom: '1rem',
+                fontWeight: '600'
+              }}>
+                visan-bingo.web.app
+              </div>
+
+              <div style={{
+                color: '#DAA520',
+                fontSize: '1.1rem',
+                textAlign: 'center',
+                lineHeight: 1.6
+              }}>
+                Skannaa QR-koodi tai mene osoitteeseen<br />
+                liittyäksesi peliin
+              </div>
+            </div>
+          ) : (
+            // Current ball display - shown after balls are drawn
+            <div style={{
+              background: 'white',
+              borderRadius: '50%',
+              minWidth: '350px',
+              minHeight: '350px',
+              width: '350px',
+              height: '350px',
+              maxWidth: '350px',
+              maxHeight: '350px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: '2rem',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 8px #DAA520',
+              flexShrink: 0
+            }}>
+              <div style={{ fontSize: '6rem', fontWeight: 'bold', color: '#1e3a5f', lineHeight: 1 }}>
+                {currentBall || calledBalls[calledBalls.length - 1]}
+              </div>
+            </div>
+          )}
 
           {/* Draw ball button */}
           <button
